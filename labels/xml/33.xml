@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Image_640*640</folder>
+	<filename>33.jpg</filename>
+	<path>/Users/mac-henry/RA_Environment/2D-3D Project setup/Image_640*640/33.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>tower_crane</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>405</xmin>
+			<ymin>244</ymin>
+			<xmax>454</xmax>
+			<ymax>286</ymax>
+		</bndbox>
+	</object>
+</annotation>

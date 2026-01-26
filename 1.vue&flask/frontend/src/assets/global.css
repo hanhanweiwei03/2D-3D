@@ -1,0 +1,28 @@
+/* 全局按钮样式（所有加了.btn类的元素都会生效） */
+.btn {
+  /* 基础样式 */
+  background-color: #007bff; /* 蓝色背景（统一色调） */
+  color: white;              /* 白色文字 */
+  padding: 10px 30px;        /* 按钮大小（上下10px，左右30px） */
+  border: none;              /* 去掉默认边框 */
+  border-radius: 5px;        /* 圆角（避免直角生硬） */
+  cursor: pointer;           /* 鼠标移上去显示手型 */
+  font-size: 16px;           /* 字号统一 */
+  transition: background-color 0.3s; /* hover动画（丝滑） */
+  display: inline-block;     /* 适配router-link（必加） */
+  text-decoration: none;     /* 去掉router-link默认的下划线 */
+}
+
+/* 鼠标悬浮时加深蓝色（交互反馈） */
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* 可选：禁用状态样式（比如识别按钮禁用时） */
+.btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed; /* 禁用时显示禁止手型 */
+}
+* {
+  color: #ffffff !important; /* !important 强制覆盖所有默认黑色 */
+}

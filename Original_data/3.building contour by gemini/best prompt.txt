@@ -1,0 +1,1 @@
+detect several isolate buildings and keep only building contours, remove irrelative line

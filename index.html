@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>塔吊检测工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 50px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #007bff;
+        }
+        #file-input {
+            display: none;
+        }
+        .btn {
+            padding: 10px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #result-area {
+            margin-top: 30px;
+            display: none;
+        }
+        #result-image {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .status {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>塔吊检测工具</h1>
+
+        <!-- 上传区域 -->
+        <div class="upload-area" id="upload-area">
+            <p>点击上传JPG/PNG格式图片</p>
+            <input type="file" id="file-input" accept=".jpg, .png">
+        </div>
+
+        <!-- 文件名展示 -->
+        <p id="file-name">未选择文件</p>
+
+        <!-- 识别按钮 -->
+        <button class="btn" id="detect-btn" disabled>开始识别</button>
+
+        <!-- 状态提示 -->
+        <div class="status" id="status"></div>
+
+        <!-- 结果展示 -->
+        <div id="result-area">
+            <h3>检测结果（共识别到<span id="detect-count">0</span>个塔吊）</h3>
+            <img id="result-image" alt="检测结果">
+        </div>
+    </div>
+
+    <script>
+        // 1. 上传区域点击触发文件选择
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileName = document.getElementById('file-name');
+        const detectBtn = document.getElementById('detect-btn');
+        const status = document.getElementById('status');
+        const resultArea = document.getElementById('result-area');
+        const resultImage = document.getElementById('result-image');
+        const detectCount = document.getElementById('detect-count');
+
+        let selectedFile = null;
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 2. 选择文件后处理
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                fileName.textContent = `已选择：${file.name}`;
+                detectBtn.disabled = false;
+                status.textContent = "";
+                resultArea.style.display = "none";
+            } else {
+                selectedFile = null;
+                fileName.textContent = "未选择文件";
+                detectBtn.disabled = true;
+            }
+        });
+
+        // 3. 点击识别按钮触发检测
+        detectBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            // 显示加载状态
+            detectBtn.disabled = true;
+            status.textContent = "正在识别中，请稍候...";
+            status.className = "status";
+
+            // 构建FormData，上传文件
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                // 调用后端接口
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    // 展示结果
+                    status.textContent = "识别完成！";
+                    detectCount.textContent = data.detect_count;
+                    resultImage.src = data.result_image_url;
+                    resultArea.style.display = "block";
+                } else {
+                    status.textContent = `错误：${data.error}`;
+                    status.className = "status error";
+                }
+            } catch (error) {
+                status.textContent = `网络错误：${error.message}`;
+                status.className = "status error";
+            } finally {
+                detectBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
